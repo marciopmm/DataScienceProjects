@@ -1,0 +1,3 @@
+From observed-solar-cycle-indices.json
+- Data URL: https://services.swpc.noaa.gov/json/solar-cycle/observed-solar-cycle-indices.json
+- Download date: 2022-09-26
