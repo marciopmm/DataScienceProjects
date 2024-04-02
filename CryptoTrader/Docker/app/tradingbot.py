@@ -1,3 +1,4 @@
+import json
 from lumibot.brokers import Alpaca
 from lumibot.backtesting import YahooDataBacktesting
 from lumibot.strategies.strategy import Strategy
@@ -6,15 +7,7 @@ from datetime import datetime, timedelta
 from alpaca_trade_api import REST
 from Docker.app.finbert_utils import estimate_sentiment
 
-API_KEY = "PK58SXLOXJ0MCMQBJZVT"
-API_SECRET = "fYlO75pUZ3GG7rYTuBvKio21wMyXVSwQn2CB6bIT"
 BASE_URL = "https://paper-api.alpaca.markets/v2"
-
-APACA_CREDS = {
-    "API_KEY": API_KEY,
-    "API_SECRET": API_SECRET,
-    "PAPER": True,
-}
 
 class MLTrader(Strategy):
     def initialize(self, symbol:str="SPY", cash_at_risk:float=.5):
@@ -22,7 +15,12 @@ class MLTrader(Strategy):
         self.sleeptime = "24H"
         self.last_trade = None
         self.cash_at_risk = cash_at_risk
-        self.api = REST(base_url=BASE_URL, key_id=API_KEY, secret_key=API_SECRET)
+        self.secrets = self.get_secrets()
+        self.api = REST(base_url=BASE_URL, key_id=secrets.get('API_KEY'), secret_key=secrets.get('API_SECRET'))
+                        
+    def get_secrets():
+        with open('secrets.json') as secrets_file:
+            return json.load(secrets_file)
 
     def position_sizing(self):
         cash = self.get_cash()
@@ -74,6 +72,17 @@ class MLTrader(Strategy):
                 )
                 self.submit_order(order)
                 self.last_trade = 'sell'
+
+def get_secrets():
+    with open('secrets.json') as secrets_file:
+        return json.load(secrets_file)
+    
+secrets = get_secrets()
+APACA_CREDS = {
+    "API_KEY": secrets.get("API_KEY"),
+    "API_SECRET": secrets.get("API_SECRET"),
+    "PAPER": secrets.get("PAPER"),
+}
     
 start_date = datetime(2020, 1, 1)
 end_date = datetime(2023, 12, 31)
