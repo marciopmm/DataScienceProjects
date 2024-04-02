@@ -1,1 +1,5 @@
-app/secrets.json
+.env
+dist/
+node_modules/
+logs
+Docker/app/secrets.json
