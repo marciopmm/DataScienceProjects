@@ -44,7 +44,7 @@ if __name__ == "__main__":
         if resultAway:
             print(f'{args.home} vs {args.away} - Draw')
         else:            
-            print(f'{args.home} vs {args.away} - {args.home} Wins')cs
+            print(f'{args.home} vs {args.away} - {args.home} Wins')
     else:
         if resultAway:
             print(f'{args.home} vs {args.away} - {args.away} Wins')            
